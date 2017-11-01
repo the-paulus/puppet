@@ -1,0 +1,12 @@
+---
+- name: Install Puppet Repository for RedHat 7
+  yum:
+    name: "https://yum.puppetlabs.com/puppetlabs-release-el-{{ ansible_os_major_version }}.noarch.rpm"
+    state: present
+  when: puppet_version < 5 and ansible_distribution_major_version in [4,5,6,7]
+
+- name: Install Puppet Repository for RedHat 7
+  yum:
+    name: "https://yum.puppetlabs.com/puppet5/puppet5-release-el-{{ ansible_os_major_version }}.noarch.rpm"
+    state: present
+  when: puppet_version == 5 and ansible_distribution_major_version in [5,6,7]

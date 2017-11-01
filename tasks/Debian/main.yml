@@ -1,0 +1,27 @@
+---
+- name: Install Puppet for Debian-based systems
+  package:
+    state: present
+    name: "https://apt.puppet.com/puppetlabs-release-{{ ansible_os_release }}.deb"
+  when: puppet_version < 5
+
+- name: Install Puppet for Debian-based systems
+  package:
+    state: present
+    name: "https://apt.puppet.com/puppet5-release-{{ ansible_os_release }}.deb"
+  when: puppet_version == 5
+
+- name: Add Java Backport
+  shell: 'echo "deb http://ftp.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list'
+  when: ansible_os_release == "Jessie" and puppet_version == 5
+
+- name: Install Java Backport
+  apt:
+    dpkg_options: force-confdef,force-confold,-t jessie-backports
+    name: openjdk-8-jdk-headless
+    state: present
+  when: ansible_os_release == "Jessie" and puppet_version == 5
+
+- name: Set default Java
+  shell: update-alternatives --set java /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+  when: ansible_os_release == "Jessie" and puppet_version == 5
