@@ -1,0 +1,33 @@
+galaxy_info:
+  author: Paul Lyon
+  description: Installs and configures hosts as either CA Masters or non-CA Masters.
+  issue_tracker_url: https://github.com/the-paulus/puppet/issues
+  license: BSD
+
+  min_ansible_version: 1.2
+
+  github_branch: master
+
+  platforms:
+  - name: Enterprise Linux
+    versions:
+    - 4
+    - 5
+    - 6
+    - 7
+  - name: Debian
+    versions:
+    - 7
+    - 8
+
+  galaxy_tags:
+  - Puppet
+  - Configuration Management
+  - Debian
+  - Enterprise Linux
+  - RedHat
+  - CentOS
+
+dependencies: []
+  # List your role dependencies here, one per line. Be sure to remove the '[]' above,
+  # if you add dependencies to this list.
