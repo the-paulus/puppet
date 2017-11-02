@@ -1,41 +1,10 @@
 ---
 # Perform any distribution specific tasks
-- include_tasks: "{{ ansible_os_distribution }}/main.yml"
-  when: puppet_install is defined and puppet_install == True
-
-- name: Retrieve configuration directory
-  shell: "puppet config print ssldir"
-  register: _puppet_ssldir
-
-- set_fact:
-    _puppet_ssldir: "{{ _puppet_ssldir.stdout }}"
-
-- set_fact:
-  puppet_private_keydir: "{{ _puppet_ssldir }}/private_keys"
-
-- set_fact:
-  puppet_public_keydir: "{{ _puppet_ssldir }}/public_keys"
-
-- name: Configure Non-CA Masters
-  shell: "puppet cert generate {{ item.hostname }} --alt_dns_names={{ item.alt_dns_names }}"
-  with_items: puppet_non_ca_masters
-  when: item.hostname == ansible_hostname
+- include_tasks: "{{ ansible_os_family }}/main.yml"
 
 - name: Install Puppet server
   package:
     name: puppetserver
-  when: puppet_install == True
-
-# Test
-- name: Configure CA Master(s)
-  template:
-    dest: /etc/puppetlabs/puppet/puppet.conf
-    src: puppet.conf.j2
-    owner: root
-    follow: no
-    group: root
-    backup: yes
-  vars: puppet_ca_masters[ansible_hostname]
 
 # Test
 - name: Enable autosigning for select hosts
@@ -47,52 +16,16 @@
     group: puppet
   when: puppet_autosign_certificates
 
-# test
-- name: Create CA certificate
-  shell: puppet master --no-daemonize & sleep 7 && kill -SIGINT $(ps a | grep -e puppet | grep -v 'grep' | awk '{print $1}')
+- include_tasks: "ca-master.yml"
+  when: puppet_ca_master.certname == ansible_fqdn
 
-# test
-- name: Craete certificates for Non-CA Masters
-  shell: "puppet cert generate {{ item.hostname }} --dns_alt_names={{ item.dns_alt_names }}"
-  with_items: puppet_non_ca_masters
-
-# test
-- name: Download public key from CA master
-  fetch:
-    dest: "{{ local_certificates_directory }}"
-    src: "{{ puppet_public_keydir }}/{{ item.hostname }}.pem"
-  with_items: puppet_non_ca_masters
-
-# test
-- name: Copy pupblic key to non-CA master
-  copy:
-    dest: "{{ puppet_public_keydir }}"
-    src: "{{ local_certificates_directory }}/{{ ansible_hostname }}/{{ puppet_public_keydir }}/{{ ansible_hostname }}.pem"
-    owner: puppet
-    group: puppet
-    mode: 0644
-  with_items: puppet_non_ca_masters
-
-# test
-- name: Download private key from CA master
-  fetch:
-    dest: "{{ local_certificates_directory }}"
-    src: "{{ puppet_private_keydir }}/{{ item.hostname }}.pem"
-  with_items: puppet_non_ca_masters
-
-# test
-- name: Copy private key to non-CA master
-  copy:
-    dest: "{{ puppet_private_keydir }}"
-    src: "{{ local_certificates_directory }}/{{ ansible_hostname }}/{{ puppet_private_keydir }}/{{ ansible_hostname }}.pem"
-    owner: puppet
-    group: puppet
-    mode: 0640
-  with_items: puppet_non_ca_masters
+- include_tasks: "non-ca-masters.yml"
+  when: puppet_non_ca_masters and puppet_ca_master.certname != ansible_fqdn
 
 - name: Installing puppet modules
   shell: "puppet module install {{ item.name }} --version={{ item.version }}"
-  with_items: puppet_modules
+  with_items: "{{ puppet_modules }}"
+  when: puppet_modules
 
 - name: Restore file contexts
   shell: restorecon -r /etc

@@ -1,0 +1,20 @@
+---
+# test
+- name: Copy public key to non-CA master
+  copy:
+    dest: "/var/lib/puppet/ssl/public_keys"
+    src: "{{ local_certificates_directory }}/public_keys/{{ item.hostname }}.pem"
+    owner: puppet
+    group: puppet
+    mode: 0644
+  with_items: "{{ puppet_non_ca_masters }}"
+
+# test
+- name: Copy private key to non-CA master
+  copy:
+    dest: "/var/lib/puppet/ssl/private_keys"
+    src: "{{ local_certificates_directory }}/private_keys/{{ item.hostname }}.pem"
+    owner: puppet
+    group: puppet
+    mode: 0640
+  with_items: "{{ puppet_non_ca_masters }}"
