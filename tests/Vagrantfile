@@ -14,7 +14,7 @@ vms = {
     { host_port: 444, guest_port: 443, id: "port-1" }
     ],
     shares: [
-      # { local: Dir.pwd + "/puppet-modules", remote: "/etc/puppetlabs/code/environments/production/modules" }
+      { local: Dir.pwd + "/puppet-modules", remote: "/etc/puppetlabs/code/environments/production/modules" }
     ],
     cpus: cpus,
     memory: 4096,
