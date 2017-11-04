@@ -9,7 +9,7 @@ galaxy_info:
   github_branch: master
 
   platforms:
-  - name: Enterprise Linux
+  - name: EL
     versions:
     - 4
     - 5
@@ -17,16 +17,15 @@ galaxy_info:
     - 7
   - name: Debian
     versions:
-    - 7
-    - 8
+    - wheezy
+    - jessie
 
   galaxy_tags:
-  - Puppet
-  - Configuration Management
-  - Debian
-  - Enterprise Linux
-  - RedHat
-  - CentOS
+  - puppet
+  - configuration
+  - debian
+  - redhat
+  - centos
 
 dependencies: []
   # List your role dependencies here, one per line. Be sure to remove the '[]' above,
