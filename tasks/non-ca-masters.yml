@@ -1,5 +1,15 @@
 ---
 # test
+- name: Create Certificate Directories on non-CA Masters
+  file:
+    path: "{{ item }}"
+    group: puppet
+    state: directory
+    owner: puppet
+  with_items:
+    - "/var/lib/puppet/ssl/public_keys"
+    - "/var/lib/puppet/ssl/private_keys"
+    
 - name: Copy public key to non-CA master
   copy:
     dest: "/var/lib/puppet/ssl/public_keys"

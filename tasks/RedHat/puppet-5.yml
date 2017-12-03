@@ -1,0 +1,14 @@
+---
+- name: Install puppetserver
+  yum:
+    name: puppetserver
+    state: present
+
+- name: Enable autosigning for select hosts
+  template:
+    dest: /etc/puppetlabs/puppet/autosign.conf
+    src: autosign.conf.j2
+    owner: puppet
+    follow: no
+    group: puppet
+  when: puppet_autosign_certificates

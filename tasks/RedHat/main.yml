@@ -10,8 +10,3 @@
     name: "https://yum.puppetlabs.com/puppet5/puppet5-release-el-{{ ansible_distribution_major_version }}.noarch.rpm"
     state: present
   when: puppet_version_install == 5 and ansible_distribution_version | version_compare('5', '>=')
-
-- name: Install puppet-server
-  yum:
-    name: puppet-server
-    state: present

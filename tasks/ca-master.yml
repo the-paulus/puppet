@@ -1,21 +1,14 @@
 ---
 - name: Configure CA Master
-  shell: "puppet config set {{ item.key }} {{ item.value }}"
+  shell: "{{ puppet_binary }} config set {{ item.key }} {{ item.value }}"
   with_dict: "{{ puppet_ca_master }}"
 
-# test
-- name: Create CA certificate
-  shell: "puppet master --no-daemonize & sleep 7 && kill -SIGINT $(ps a | grep -e puppet | grep -v 'grep' | awk '{print $1}') ; true"
-  ignore_errors: yes
-
-# test
-- name: Craete certificates for Non-CA Masters
-  shell: "puppet cert generate {{ item.hostname }} --dns_alt_names={{ item.alt_dns_names }} ; true"
+- name: Create certificates for Non-CA Masters
+  shell: "{{ puppet_binary }} cert generate {{ item.hostname }} --dns_alt_names={{ item.alt_dns_names }} ; true"
   with_items: "{{ puppet_non_ca_masters }}"
   when: puppet_non_ca_masters
   ignore_errors: yes
 
-# test
 - name: Download public key from CA master
   fetch:
     dest: "{{ local_certificates_directory }}/public_keys/"
@@ -24,7 +17,6 @@
   with_items: "{{ puppet_non_ca_masters }}"
   when: puppet_non_ca_masters
 
-# test
 - name: Download private key from CA master
   fetch:
     dest: "{{ local_certificates_directory }}/private_keys/"

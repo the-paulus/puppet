@@ -1,37 +1,35 @@
 ---
 # Perform any distribution specific tasks
-- include_tasks: "{{ ansible_os_family }}/main.yml"
+- name: Including tasks for OS.
+  include: "{{ ansible_distribution }}/main.yml"
 
-- name: Install Puppet server
-  package:
-    name: puppetserver
+- name: Including specific puppet tasks
+  include: "{{ ansible_distribution }}/puppet.yml"
+  when: puppet_version_install|int < 5
 
-# Test
-- name: Enable autosigning for select hosts
-  template:
-    dest: /etc/puppet/autosign.conf
-    src: autosign.conf.j2
-    owner: puppet
-    follow: no
-    group: puppet
-  when: puppet_autosign_certificates
+- name: Including specific puppet5 tasks
+  include: "{{ ansible_distribution }}/puppet-5.yml"
+  when: puppet_version_install|int == 5
 
-- include_tasks: "ca-master.yml"
+- name: Set puppet binary
+  set_fact:
+    puppet_binary: /opt/puppetlabs/bin/puppet
+  when: puppet_version_install|int == 5
+
+- include: "ca-master.yml"
   when: puppet_ca_master.certname == ansible_fqdn
 
-- include_tasks: "non-ca-masters.yml"
+- include: "non-ca-masters.yml"
   when: puppet_non_ca_masters and puppet_ca_master.certname != ansible_fqdn
 
 - name: Installing puppet modules
-  shell: "puppet module install {{ item.name }} --version={{ item.version }}"
+  shell: "{{ puppet_binary }} module install {{ item.name }} --version={{ item.version }}"
   with_items: "{{ puppet_modules }}"
   when: puppet_modules
 
 - name: Restore file contexts
   shell: restorecon -r /etc
   when: ansible_selinux['status'] == 'enforcing'
-
-# To do: add modules
 
 - name: Start puppet server
   service:
