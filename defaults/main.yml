@@ -3,22 +3,19 @@ puppet_version_install: 3
 local_certificates_directory: remote_files
 
 puppet_ca_master:
-  certname: "puppetmaster.localdomain"
-  server: "puppetmaster.localdomain"
-  alt_dns_names: "puppetmaster"
+  certname: "puppet.example.com"
+  server: "puppet.example.com"
+  alt_dns_names: "puppet"
 
-puppet_non_ca_masters:
-  - hostname: "creation.localdomain"
-    alt_dns_names: "creation"
-  - hostname: "revenge.localdomain"
-    alt_dns_names: "revenge"
+puppet_non_ca_masters: []
+  #- hostname: "creation.local"
+  #  alt_dns_names: "creation"
+  #- hostname: "revenge.local"
+  #  alt_dns_names: "revenge"
 
-puppet_modules:
-  - name: puppetlabs-firewall
-    version: 1.9.0
+puppet_modules: []
+  #- name: puppetlabs-firewall
+  # dxdx  version: 1.9.0
 
-puppet_autosign_certificates:
-  - "blade"
-  - "decapitron"
-  - "pinhead"
-  - "jester"
+puppet_autosign_certificates: []
+  #- "agent.example.com"
