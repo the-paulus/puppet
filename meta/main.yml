@@ -12,15 +12,10 @@ galaxy_info:
   - name: EL
     versions:
     - all
-  - name: Debian
-    versions:
-    - wheezy
-    - jessie
 
   galaxy_tags:
   - puppet
   - configuration
-  - debian
   - redhat
   - centos
 
