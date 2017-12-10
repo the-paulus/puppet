@@ -3,14 +3,14 @@ puppet_version_install: 3
 local_certificates_directory: remote_files
 
 puppet_ca_master:
-  certname: "puppet.example.com"
-  server: "puppet.example.com"
-  alt_dns_names: "puppet"
+  certname: "puppetmaster.example.com"
+  server: "puppetmaster.example.com"
+  alt_dns_names: "puppetmaster,puppet"
 
 puppet_non_ca_masters: []
-  #- hostname: "creation.local"
+  #- hostname: "creation.example.com"
   #  alt_dns_names: "creation"
-  #- hostname: "revenge.local"
+  #- hostname: "revenge.example.com"
   #  alt_dns_names: "revenge"
 
 puppet_modules: []
