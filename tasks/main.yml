@@ -1,19 +1,14 @@
 ---
 # Perform any distribution specific tasks
 - name: Including tasks for OS.
-  include: "{{ ansible_distribution }}/main.yml"
+  include: "{{ ansible_os_family }}/main.yml"
 
 - name: Including specific puppet tasks
-  include: "{{ ansible_distribution }}/puppet.yml"
+  include: "{{ ansible_os_family }}/puppet.yml"
   when: puppet_version_install|int < 5
 
 - name: Including specific puppet5 tasks
-  include: "{{ ansible_distribution }}/puppet-5.yml"
-  when: puppet_version_install|int == 5
-
-- name: Set puppet binary
-  set_fact:
-    puppet_binary: /opt/puppetlabs/bin/puppet
+  include: "{{ ansible_os_family }}/puppet-5.yml"
   when: puppet_version_install|int == 5
 
 - include: "ca-master.yml"
@@ -36,3 +31,11 @@
     name: puppetserver
     enabled: yes
     state: started
+  when: puppet_version_install|int == 5
+
+- name: Start puppet server
+  service:
+    name: puppetmaster
+    enabled: yes
+    state: started
+  when: puppet_version_install|int < 5
