@@ -4,6 +4,10 @@
     name: puppetserver
     state: present
 
+- name: Set puppet binary
+  set_fact:
+    puppet_binary: /opt/puppetlabs/bin/puppet
+
 - name: Enable autosigning for select hosts
   template:
     dest: /etc/puppetlabs/puppet/autosign.conf
