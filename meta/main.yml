@@ -12,12 +12,18 @@ galaxy_info:
   - name: EL
     versions:
     - all
+  - name: Ubuntu
+    versions:
+    - Xenial
+    - Trusty
+    - Precise
 
   galaxy_tags:
   - puppet
   - configuration
   - redhat
   - centos
+  - ubuntu
 
 dependencies: []
   # List your role dependencies here, one per line. Be sure to remove the '[]' above,

@@ -6,7 +6,7 @@ Installs and configures hosts as either CA Masters or non-CA Masters.
 Requirements
 ------------
 
-None.
+Although there are no requirements for this role there are some for Puppet. Ensure your environment meets those requirements.
 
 Role Variables
 --------------

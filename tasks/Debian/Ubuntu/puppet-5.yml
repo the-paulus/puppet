@@ -1,0 +1,25 @@
+---
+- name: "Download puppet 5 package for {{ ansible_distribution }} - {{ ansible_distribution_release }}"
+  shell: wget "https://apt.puppetlabs.com/puppet5-release-{{ ansible_distribution_release }}.deb"
+  args:
+    chdir: "/root"
+
+- name: "Install puppet package 5 for {{ ansible_distribution }} - {{ ansible_distribution_release }}"
+  shell: "dpkg -i --no-triggers /root/puppet5-release-{{ ansible_distribution_release }}.deb && apt-get update"
+  args:
+    chdir: "/root"
+
+- name: "Remove downloaded file."
+  file:
+    path: "/root/puppet5-release-{{ ansible_distribution_release }}.deb"
+    state: absent
+
+- name: Install Puppet Server
+  package:
+    name: puppetmaster
+
+- name: Start puppet 5 service
+  service:
+    name: puppetmaster
+    enabled: yes
+    state: started

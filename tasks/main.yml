@@ -3,14 +3,6 @@
 - name: Including tasks for OS.
   include: "{{ ansible_os_family }}/main.yml"
 
-- name: Including specific puppet tasks
-  include: "{{ ansible_os_family }}/puppet.yml"
-  when: puppet_version_install|int < 5
-
-- name: Including specific puppet5 tasks
-  include: "{{ ansible_os_family }}/puppet-5.yml"
-  when: puppet_version_install|int == 5
-
 - include: "ca-master.yml"
   when: puppet_ca_master.certname == ansible_fqdn
 
@@ -25,26 +17,3 @@
 - name: Restore file contexts
   shell: restorecon -r /etc
   when: ansible_selinux['status'] == 'enforcing'
-
-- name: Start puppet server
-  service:
-    name: puppetserver
-    enabled: yes
-    state: started
-  when: puppet_version_install|int == 5
-
-- name: Start puppet server
-  service:
-    name: puppetmaster
-    enabled: yes
-    state: started
-  when: puppet_version_install|int < 5
-
-- name: Sign Non-Ca Masters
-  shell: "{{ puppet_binary }} cert --allow-dns-alt-names sign {{ item.hostname }}"
-  with_items: "{{ puppet_non_ca_masters }}"
-  when: ansible_fqdn == puppet_ca_master.server
-
-- name: Sign CA Master
-  shell: "{{ puppet_binary }} cert --allow-dns-alt-names sign {{ puppet_ca_master.server }}"
-  when: ansible_fqdn == puppet_ca_master.server
