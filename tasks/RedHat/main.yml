@@ -10,3 +10,11 @@
     name: "https://yum.puppetlabs.com/puppet5/puppet5-release-el-{{ ansible_distribution_major_version }}.noarch.rpm"
     state: present
   when: puppet_version_install == 5 and ansible_distribution_version | version_compare('5', '>=')
+
+- name: "Import puppet tasks"
+  include_tasks: puppet.yml
+  when: puppet_version_install|int < 5
+
+- name: "Import puppet 5 tasks"
+  include_tasks: puppet-5.yml
+  when: puppet_version_install|int == 5

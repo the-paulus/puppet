@@ -4,6 +4,10 @@
     name: puppet-server
     state: present
 
+#- name: Sign CA Master
+#  shell: "{{ puppet_binary }} cert --allow-dns-alt-names sign {{ puppet_ca_master.server }}"
+#  when: ansible_fqdn == puppet_ca_master.server
+
 - name: Enable autosigning for select hosts
   template:
     dest: /etc/puppet/autosign.conf
@@ -12,3 +16,9 @@
     follow: no
     group: puppet
   when: puppet_autosign_certificates
+
+- name: Start puppet-server
+  service:
+    name: puppetmaster
+    state: started
+    enabled: yes
