@@ -14,9 +14,9 @@ galaxy_info:
     - all
   - name: Ubuntu
     versions:
-    - Xenial
-    - Trusty
-    - Precise
+    - xenial
+    - trusty
+    - precise
 
   galaxy_tags:
   - puppet
