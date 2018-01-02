@@ -1,0 +1,8 @@
+---
+puppet_binary: puppet
+
+puppet_service:
+  Debian: puppetserver
+  Gentoo: puppetserver
+  RedHat: puppetserver
+  Ubuntu: puppetserver
